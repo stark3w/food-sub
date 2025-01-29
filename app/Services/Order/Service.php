@@ -19,6 +19,13 @@ class Service
 
             $order = Order::create($data);
 
+            $firstDate = Carbon::parse($data['delivery_dates'][0]['from']);
+            $lastDate = Carbon::parse($data['delivery_dates'][count($data['delivery_dates']) - 1]['to']);
+
+            $order->first_date = $firstDate->format('Y-m-d');
+            $order->last_date = $lastDate->format('Y-m-d');
+            $order->save();
+
             foreach ($data['delivery_dates'] as $date)
             {
                 $this->createRations($order,$date);
@@ -39,9 +46,6 @@ class Service
 
         $startDate = Carbon::parse($date['from']);
         $endDate = Carbon::parse($date['to']);
-        $order->first_date = $startDate->format('Y-m-d');
-        $order->last_date = $endDate->format('Y-m-d');
-        $order->save();
 
         while($startDate <= $endDate)
         {
