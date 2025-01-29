@@ -4,8 +4,6 @@ services:
             context: .
             dockerfile: Dockerfile
         container_name: laravel-app
-        volumes:
-            - .:/var/www
         ports:
             - "8000:8000"
         depends_on:
@@ -19,5 +17,4 @@ services:
         ports:
             - "3306:3306"
 
-volumes:
-    mysql_data:
+
