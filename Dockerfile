@@ -15,9 +15,7 @@ WORKDIR /var/www
 COPY . .
 
 RUN composer install --no-cache --optimize-autoloader --no-dev
-RUN php artisan key:generate
-RUN php artisan migrate --force
-RUN php artisan db:seed --force
+RUN composer require fakerphp/faker
 
 EXPOSE 8000
 
