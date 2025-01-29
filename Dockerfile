@@ -1,10 +1,12 @@
 FROM php:8.2-fpm
+
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     zip \
     unzip \
-    && docker-php-ext-install pdo_mysql zip
+    && docker-php-ext-install pdo_mysql zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -12,7 +14,10 @@ WORKDIR /var/www
 
 COPY . .
 
-RUN composer install
+RUN composer install --no-cache --optimize-autoloader --no-dev
+RUN php artisan key:generate
+RUN php artisan migrate --force
+RUN php artisan db:seed --force
 
 EXPOSE 8000
 
